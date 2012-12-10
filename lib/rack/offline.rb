@@ -72,8 +72,13 @@ module Rack
   private
 
     def precache_key!
-      # Recalculate whenever the server starts up
-      @key = Digest::SHA2.hexdigest(ENV['COMMIT_HASH'] || Time.now.to_i.to_s)
+      hash = @config.cache.sort!.map do |item|
+        item = item.sub /^\//, '' #Strip initial slashes
+        path = @root.join(item)
+        Digest::SHA2.hexdigest(path.read) if ::File.file?(path)
+      end
+
+      @key = Digest::SHA2.hexdigest(hash.join)
     end
     
     def uncached_key
