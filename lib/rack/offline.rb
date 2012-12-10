@@ -73,8 +73,8 @@ module Rack
 
     def precache_key!
       hash = @config.cache.sort!.map do |item|
+        item = item.sub /^\//, '' #Strip initial slashes
         path = @root.join(item)
-        Rails.logger.info "#{item} -> #{path}"
         Digest::SHA2.hexdigest(path.read) if ::File.file?(path)
       end
 
