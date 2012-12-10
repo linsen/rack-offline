@@ -73,7 +73,7 @@ module Rack
 
     def precache_key!
       # Recalculate whenever the server starts up
-      @key = Digest::SHA2.hexdigest(Time.now.to_i)
+      @key = Digest::SHA2.hexdigest(Time.now.to_i.to_s)
     end
     
     def uncached_key
